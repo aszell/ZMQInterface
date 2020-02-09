@@ -329,19 +329,19 @@ void ZmqInterface::run()
 
 /* format for passing data
  JSON
- { "messageNo": number,
+ { "message_no": number,
  "type": "data"|"event"|"parameter",
  "content":
  (for data)
- { "nChannels": nChannels,
- "nSamples": nSamples
+ { "n_channels": nChannels,
+ "n_samples": nSamples
  }
  (for event)
  {
- "eventType": number,
- "sampleNum": sampleNum (number),
- "eventId": id (number),
- "eventChannel": channel (number),
+ "event_type": number,
+ "sample_num": sampleNum (number),
+ "event_id": id (number),
+ "event_channel": channel (number),
  }
  (for parameter)
  {
@@ -349,14 +349,15 @@ void ZmqInterface::run()
  "param_name2": param_value2,
  ...
  }
- "dataSize": size (if size > 0 it's the size of binary data coming in in the next frame (multi-part message)
+ "data_size": size (if size > 0 it's the size of binary data coming in in the next frame (multi-part message)
  }
  
  and then a possible data packet
  */
 
 
-int ZmqInterface::sendData(float *data, int nChannels, int nSamples, int nRealSamples, int64 timestamp)
+int ZmqInterface::sendData(float *data, int nChannels, int nSamples, int nRealSamples, 
+                           int64 timestamp, int sampRate)
 {
     
     messageNumber++;
@@ -374,9 +375,10 @@ int ZmqInterface::sendData(float *data, int nChannels, int nSamples, int nRealSa
     c_obj->setProperty("n_samples", nSamples);
     c_obj->setProperty("n_real_samples", nRealSamples);
     c_obj->setProperty("timestamp", timestamp);
+    c_obj->setProperty("sampling_rate", sampRate);
 
     obj->setProperty("content", var(c_obj));
-    obj->setProperty("dataSize", (int)(nChannels * nSamples * sizeof(float)));
+    obj->setProperty("data_size", (int)(nChannels * nSamples * sizeof(float)));
     
     var json(obj);
     
@@ -743,6 +745,7 @@ int ZmqInterface::receiveEvents(MidiBuffer &events)
 
         if (ed.isEvent) {
             std::cout << "ZMQ event received\n";
+            std::cout << "Sampling rate: " << getSampleRate() << "\n";
         }
 #if 0
         if (ed.isEvent) {
@@ -790,7 +793,7 @@ void ZmqInterface::process(AudioSampleBuffer& buffer)
     uint64_t firstTs = getTimestamp(0) - getNumSamples(0);
 
     sendData(*(buffer.getArrayOfWritePointers()), buffer.getNumChannels(), 
-        buffer.getNumSamples(), getNumSamples(0), firstTs);
+        buffer.getNumSamples(), getNumSamples(0), firstTs, (int)getSampleRate());
 
 #if 0
     receiveEvents(events);
@@ -804,4 +807,12 @@ void ZmqInterface::updateSettings()
     
 }
 
-
+float ZmqInterface::getSampleRate(int subProcessorIdx) const
+{
+    GenericProcessor* src = getSourceNode();
+    if (src) {
+        src->getSampleRate(subProcessorIdx);
+    } else {
+        return 42000.0;
+    }
+}

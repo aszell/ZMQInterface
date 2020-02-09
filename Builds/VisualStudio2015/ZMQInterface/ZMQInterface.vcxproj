@@ -146,7 +146,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_WINDLL;ZMQINTERFACE_EXPORTS;%(PreprocessorDefinitions);OEPLUGIN;JUCE_API=__declspec(dllimport);JUCE_APP_VERSION=0.3.5;_CRT_SECURE_NO_WARNINGS;_MBCS;NOMINMAX;JUCE_NO_DEPRECATION_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\..\..\github-plugin-GUI\Source\Plugins\Headers\;..\..\..\..\github-plugin-GUI\JuceLibraryCode\modules;..\..\..\..\github-plugin-GUI\Resources\windows-libs\ZeroMQ\include;..\..\..\..\github-plugin-GUI\JuceLibraryCode</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\github-plugin-GUI\Source\Plugins\Headers\;..\..\..\..\github-plugin-GUI\JuceLibraryCode\modules;..\..\..\..\github-plugin-GUI\Resources\windows-libs\ZeroMQ\include;..\..\..\..\github-plugin-GUI\JuceLibraryCode;D:\proj\42\github\bandita137\github-plugin-GUI\Plugins\Headers</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,7 +157,7 @@
       <AdditionalLibraryDirectories>..\..\..\..\github-plugin-GUI\Builds\VisualStudio2013\x64\Release64\bin;%(AdditionalLibraryDirectories);..\..\..\..\github-plugin-GUI\Resources\windows-libs\ZeroMQ\lib_x64</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y d:\proj\42\ephys_restart09_compilevs2015\ZMQInterface\Builds\VisualStudio2015\ZMQInterface\x64\Release\ZMQInterface.dll   d:\proj\42\ephys_restart09_compilevs2015\github-plugin-GUI\Builds\VisualStudio2015\x64\Release64\bin\plugins\</Command>
+      <Command>distribute_dll.bat</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Overwrite old ZMQ dll</Message>
