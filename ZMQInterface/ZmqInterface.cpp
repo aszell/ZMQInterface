@@ -811,7 +811,8 @@ float ZmqInterface::getSampleRate(int subProcessorIdx) const
 {
     GenericProcessor* src = getSourceNode();
     if (src) {
-        src->getSampleRate(subProcessorIdx);
+        //src->getSampleRate(subProcessorIdx);
+        CoreServices::getGlobalSampleRate();
     } else {
         return 42000.0;
     }
